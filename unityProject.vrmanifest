@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.spellcastdemo.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "F:\\Unity Projects\\Git Repos\\SpellCastDemo\\SpellCastDemo\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "action_manifest_path": "F:\\Unity Projects\\Git Repos\\SpellDemo\\Assets\\StreamingAssets\\SteamVR\\actions.json",
       "strings": {
         "en_us": {
           "name": "SpellCastDemo [Testing]"
