@@ -6,19 +6,22 @@ using Valve.VR.InteractionSystem;
 using Valve.VR.Extras;
 using FreeDraw;
 using UnityEditorInternal;
+using UnityEngine.UI;
 
 public class SpellInput : SymbolRecognition
 {
-   
-    [Header("")]
+    [Header("DEBUG INFO")]
+    public Text text;
+    public Text pinch;
+    public Text grab;
+
+
+    [Header("STuff")]
     public Hand hand;
-    public SteamVR_Action_Boolean action_Boolean;
+    public SteamVR_Action_Boolean action_pinch;
     public SteamVR_Action_Boolean action_grab;
-    public SteamVR_Action_Vibration action_vibration;
-    public SteamVR_Input_Sources input_Sources;
 
     [Header("")]
-    public Transform spellHand;
     RaycastHit hit;
 
     public Drawable drawable;
@@ -29,8 +32,17 @@ public class SpellInput : SymbolRecognition
 	// Update is called once per frame
 	void Update()
     {
-        if (!action_Boolean.state && action_grab.state)
+        Debug.DrawRay(hand.skeleton.indexTip.position, hand.skeleton.indexTip.right);
+
+        Vector3 forward = drawable.transform.TransformDirection(Vector3.back);
+        Vector3 toOther = hand.skeleton.middleMetacarpal.position - drawable.transform.position;
+
+        pinch.text = action_pinch.state.ToString();
+        grab.text = action_grab.state.ToString();
+
+        if (!action_pinch.state && action_grab.state)
         {
+            text.text = "drawing";
             Ray raycast = new Ray(hand.skeleton.indexTip.position, hand.skeleton.indexTip.right);
             if (Physics.Raycast(raycast, out hit, 0.05f))
 		    {
@@ -48,12 +60,12 @@ public class SpellInput : SymbolRecognition
                 NotDrawing();
             }
 		}
-        else if (!action_Boolean.state && !action_grab.state)
-		{
-            Ray raycast = new Ray(hand.skeleton.indexTip.position, hand.skeleton.indexTip.forward);
-            if (Physics.Raycast(raycast, out hit, 0.1f))
+        else if (Vector3.Dot(forward, toOther) < 0)
+        {
+            if (!action_pinch.state && !action_grab.state)
             {
-                if (hit.transform.CompareTag("CastSpell"))
+                text.text = "Casting";
+                if (!newLine)
                 {
                     newLine = true;
                     drawable.ResetCanvas();
@@ -61,10 +73,11 @@ public class SpellInput : SymbolRecognition
                     DrawingInputStart(GestureInput.Cast);
                 }
             }
-
         }
+
         else
         {
+            
             NotDrawing();
         }
     }

@@ -114,6 +114,7 @@ public class SymbolRecognition : MonoBehaviour
                     Spell(2);
                     break;
 			}
+            gestureClass = "";
 		}
 	}
 
