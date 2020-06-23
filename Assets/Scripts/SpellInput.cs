@@ -7,7 +7,7 @@ using Valve.VR.Extras;
 using FreeDraw;
 using UnityEditorInternal;
 
-public class SpellInput : MonoBehaviour
+public class SpellInput : SymbolRecognition
 {
    
     [Header("")]
@@ -23,14 +23,12 @@ public class SpellInput : MonoBehaviour
 
     public Drawable drawable;
 
+    bool newLine = true;
 
+	
 	// Update is called once per frame
 	void Update()
     {
-       
-
-        
-
         if (!action_Boolean.state && action_grab.state)
         {
             Ray raycast = new Ray(hand.skeleton.indexTip.position, hand.skeleton.indexTip.right);
@@ -50,6 +48,21 @@ public class SpellInput : MonoBehaviour
                 NotDrawing();
             }
 		}
+        else if (!action_Boolean.state && !action_grab.state)
+		{
+            Ray raycast = new Ray(hand.skeleton.indexTip.position, hand.skeleton.indexTip.forward);
+            if (Physics.Raycast(raycast, out hit, 0.1f))
+            {
+                if (hit.transform.CompareTag("CastSpell"))
+                {
+                    newLine = true;
+                    drawable.ResetCanvas();
+                    NotDrawing();
+                    DrawingInputStart(GestureInput.Cast);
+                }
+            }
+
+        }
         else
         {
             NotDrawing();
@@ -58,9 +71,23 @@ public class SpellInput : MonoBehaviour
 
     void DrawSymbol(Vector3 drawPosition)
 	{
+        // Make the drawing visiable
         drawable.isDrawing = true;
         drawable.isInDrawSpace = true;
-        drawable.drawCoords = (Vector2)drawPosition;
+		drawable.drawCoords = (Vector2)drawPosition;
+
+        // Check what symbol has been drawn
+        if (newLine)
+		{
+            newLine = false;
+            DrawingInputStart(GestureInput.Draw);
+		}
+		else
+		{
+            DrawingInputMove(drawPosition);
+		}
+
+
 	}
     void NotDrawing()
 	{

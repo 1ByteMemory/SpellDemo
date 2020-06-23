@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Box
+  - CastSpell
   layers:
   - Default
   - TransparentFX

@@ -260,11 +260,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 497192986}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.20826113, y: -0.102840185, z: -0.012}
+  m_LocalPosition: {x: 0, y: 1.118, z: 0.8046}
   m_LocalScale: {x: 1, y: 1, z: 0.07}
   m_Children: []
-  m_Father: {fileID: 1818117232}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &497192988
 MonoBehaviour:
@@ -363,8 +363,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 7.9246564}
-  m_Center: {x: 0, y: 0, z: 3.4623277}
+  m_Size: {x: 1, y: 1, z: 0.08}
+  m_Center: {x: 0, y: 0, z: 0.045}
 --- !u!1 &498631451
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,7 +647,7 @@ GameObject:
   - component: {fileID: 798368796}
   - component: {fileID: 798368795}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: SpellInput
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -665,6 +665,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3022ca717197bbf4687c73d333cf204a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gestureClass: 
+  castPosition: {fileID: 798368796}
+  spells:
+  - {fileID: 1336195079116077006, guid: a7bbf9993125d2240a3e88bc5eae5aff, type: 3}
+  - {fileID: 5729168760922400365, guid: cd6d83632193903469ad0b075aa3d98b, type: 3}
+  - {fileID: 5062028381181332949, guid: a541a4c173fdd06488bf88f6023e6d2e, type: 3}
   hand: {fileID: 1173701411}
   action_Boolean:
     actionPath: /actions/default/in/GrabPinch
@@ -686,7 +692,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 798368794}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.042053938, y: 0.7243998, z: 1.0421075}
+  m_LocalPosition: {x: 0.042053938, y: 1.087, z: 1.198}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -845,6 +851,67 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 1173701410}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1345825235
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1345825238}
+  - component: {fileID: 1345825237}
+  - component: {fileID: 1345825236}
+  m_Layer: 0
+  m_Name: SpellCastCollider
+  m_TagString: CastSpell
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!54 &1345825236
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345825235}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 112
+  m_CollisionDetection: 0
+--- !u!65 &1345825237
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345825235}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 0.08}
+  m_Center: {x: 0, y: 0, z: 0.045}
+--- !u!4 &1345825238
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1345825235}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.118, z: 0.953}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1361483586
 GameObject:
   m_ObjectHideFlags: 0
@@ -1032,8 +1099,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1818117232}
+  - component: {fileID: 1818117234}
+  - component: {fileID: 1818117233}
   m_Layer: 0
-  m_Name: GameObject (1)
+  m_Name: SpellBoard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1047,10 +1116,56 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1818117231}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.20826113, y: 1.2208402, z: 0.8140014}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 497192987}
+  m_LocalPosition: {x: -0.038, y: 1.137, z: 0.814}
+  m_LocalScale: {x: 1, y: 1, z: 0.01613}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &1818117233
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818117231}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: a6bf74974f389ef4389b1e88acfbca7b, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+--- !u!33 &1818117234
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1818117231}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
