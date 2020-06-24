@@ -44,7 +44,7 @@ public class SpellInput : SymbolRecognition
         {
             text.text = "drawing";
             Ray raycast = new Ray(hand.skeleton.indexTip.position, hand.skeleton.indexTip.right);
-            if (Physics.Raycast(raycast, out hit, 0.05f))
+            if (Physics.Raycast(raycast, out hit, 0.01f))
 		    {
                 if (hit.transform.CompareTag("Box"))
 			    {
