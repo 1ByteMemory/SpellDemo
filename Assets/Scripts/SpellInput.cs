@@ -12,11 +12,6 @@ using UnityEngine.SocialPlatforms;
 
 public class SpellInput : SymbolRecognition
 {
-    [Header("DEBUG INFO")]
-    public Text text;
-    public Text pinch;
-    public Text grab;
-
 
     [Header("STuff")]
     [Tooltip("The spell drawing range in cm")]
@@ -114,7 +109,6 @@ public class SpellInput : SymbolRecognition
         uvs.y /= tex.height;
 
 
-        text.text = uvs.ToString();
         return uvs;
     }
 
@@ -136,9 +130,7 @@ public class SpellInput : SymbolRecognition
         drawable.isInDrawSpace = true;
 
 		//Vector2 localPoint = hit.transform.InverseTransformPoint(drawPosition);
-        pinch.text = (hit.point * 10).ToString();
-        grab.text = (drawPosition * 10).ToString();
-
+        
         drawable.drawCoords = (Vector2)drawPosition;
 
 

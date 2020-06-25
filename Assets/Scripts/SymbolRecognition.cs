@@ -104,13 +104,13 @@ public class SymbolRecognition : MonoBehaviour
 			// Switch case on action to take based on symbol
 			switch (gestureClass)
 			{
-				case "cube":
+				case "Fire":
                     Spell(0);
 					break;
-                case "sphear":
+                case "Ice":
                     Spell(1);
                     break;
-                case "pyrimid":
+                case "Earth":
                     Spell(2);
                     break;
 			}
