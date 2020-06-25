@@ -250,7 +250,7 @@ namespace FreeDraw
         public Vector2 WorldToPixelCoordinates(Vector2 world_position)
         {
             // Change coordinates to local coordinates of this image
-            Vector3 local_pos = transform.InverseTransformPoint(world_position);
+            //Vector3 local_pos = transform.InverseTransformPoint(world_position);
 
             // Change these to coordinates of pixels
             float pixelWidth = drawable_sprite.rect.width;
@@ -258,8 +258,8 @@ namespace FreeDraw
             float unitsToPixels = pixelWidth / drawable_sprite.bounds.size.x * transform.localScale.x;
 
             // Need to center our coordinates
-            float centered_x = local_pos.x * unitsToPixels + pixelWidth / 2;
-            float centered_y = local_pos.y * unitsToPixels + pixelHeight / 2;
+            float centered_x = world_position.x * unitsToPixels + pixelWidth / 2;
+            float centered_y = world_position.y * unitsToPixels + pixelHeight / 2;
 
             // Round current mouse position to nearest pixel
             Vector2 pixel_pos = new Vector2(Mathf.RoundToInt(centered_x), Mathf.RoundToInt(centered_y));

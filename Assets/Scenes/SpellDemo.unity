@@ -3978,7 +3978,7 @@ MonoBehaviour:
   handFollowTransform: 1
   highlightOnHover: 1
   hideHighlight:
-  - {fileID: 497192986}
+  - {fileID: 0}
   - {fileID: 634696208}
   hoverPriority: 0
 --- !u!114 &1748445575

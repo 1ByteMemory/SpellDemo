@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpellProjectile : MonoBehaviour
 {
 	public float projectileForce;
-	public Vector3 forceDirection;
+	//public Vector3 forceDirection;
 	Rigidbody rb;
 
 	bool hasCast;
@@ -21,7 +21,7 @@ public class SpellProjectile : MonoBehaviour
 		if (!hasCast)
 		{
 			hasCast = true;
-			rb.AddForce(forceDirection * projectileForce, ForceMode.Impulse);
+			rb.AddForce(transform.forward * projectileForce, ForceMode.Impulse);
 		}
 		
 	}

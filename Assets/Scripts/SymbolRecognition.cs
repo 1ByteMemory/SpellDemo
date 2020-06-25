@@ -120,7 +120,7 @@ public class SymbolRecognition : MonoBehaviour
 
     void Spell(int index)
 	{
-        Instantiate(spells[index], castPosition.position, Quaternion.LookRotation(Vector3.forward));
+        Instantiate(spells[index], castPosition.position, Quaternion.LookRotation(transform.forward));
     }
 
 
