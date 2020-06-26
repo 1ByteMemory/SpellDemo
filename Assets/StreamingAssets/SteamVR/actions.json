@@ -9,11 +9,11 @@
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/GrabPinch",
+      "name": "/actions/default/in/GrabPinchR",
       "type": "boolean"
     },
     {
-      "name": "/actions/default/in/GrabGrip",
+      "name": "/actions/default/in/GrabGripR",
       "type": "boolean"
     },
     {
@@ -47,6 +47,14 @@
     },
     {
       "name": "/actions/default/in/SnapTurnRight",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/GrabPinchL",
+      "type": "boolean"
+    },
+    {
+      "name": "/actions/default/in/GrabGripL",
       "type": "boolean"
     },
     {
@@ -86,7 +94,7 @@
   "action_sets": [
     {
       "name": "/actions/default",
-      "usage": "single"
+      "usage": "leftright"
     },
     {
       "name": "/actions/platformer",
@@ -154,8 +162,6 @@
   "localization": [
     {
       "language_tag": "en_US",
-      "/actions/default/in/GrabGrip": "Grab Grip",
-      "/actions/default/in/GrabPinch": "Grab Pinch",
       "/actions/default/in/HeadsetOnHead": "Headset on head (proximity sensor)",
       "/actions/default/in/InteractUI": "Interact With UI",
       "/actions/default/in/Pose": "Pose",
@@ -165,7 +171,11 @@
       "/actions/default/out/Haptic": "Haptic",
       "/actions/platformer/in/Jump": "Jump",
       "/actions/default/in/SnapTurnLeft": "Snap Turn (Left)",
-      "/actions/default/in/SnapTurnRight": "Snap Turn (Right)"
+      "/actions/default/in/SnapTurnRight": "Snap Turn (Right)",
+      "/actions/default/in/GrabPinchR": "Grab Pinch (Right Hand)",
+      "/actions/default/in/GrabGripR": "Grab Grip (Right Hand)",
+      "/actions/default/in/GrabPinchL": "Grab Pinch (Left Hand)",
+      "/actions/default/in/GrabGripL": "Grab Grip (Left Hand)"
     }
   ]
 }

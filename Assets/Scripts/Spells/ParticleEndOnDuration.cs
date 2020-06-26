@@ -7,14 +7,19 @@ public class ParticleEndOnDuration : MonoBehaviour
 	ParticleSystem particle;
 	public float destroyDelay;
 
-	private void Start()
+	float endTime;
+
+
+
+	private void OnEnable()
 	{
 		particle = GetComponent<ParticleSystem>();
+		endTime = Time.time + particle.main.duration + destroyDelay;
 	}
 
 	private void Update()
 	{
-		if (particle.time >= particle.main.duration + destroyDelay)
+		if (Time.time >= endTime)
 		{
 			Destroy(gameObject);
 		}

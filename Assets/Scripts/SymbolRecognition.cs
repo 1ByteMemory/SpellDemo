@@ -27,7 +27,7 @@ public class SymbolRecognition : MonoBehaviour
     public GameObject[] spells;
 
     // Start is called before the first frame update
-    void Start()
+    public virtual void Start()
     {
         trainingSet = LoadTrainingSet();
     }
