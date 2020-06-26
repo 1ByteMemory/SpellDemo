@@ -5,10 +5,6 @@ using Valve.VR;
 using Valve.VR.InteractionSystem;
 using Valve.VR.Extras;
 using FreeDraw;
-using UnityEditorInternal;
-using UnityEngine.UI;
-//using System.Numerics;
-//using UnityEngine.SocialPlatforms;
 
 public class SpellInput : SymbolRecognition
 {
@@ -46,8 +42,6 @@ public class SpellInput : SymbolRecognition
 	// Update is called once per frame
 	void Update()
     {
-        //Debug.DrawRay(handR.skeleton.indexTip.position, handR.skeleton.indexTip.right);
-        //Debug.DrawRay(handL.skeleton.indexTip.position, -handL.skeleton.indexTip.right);
 
         Vector3 forward = drawable.transform.TransformDirection(Vector3.back);
         Vector3 toOtherR = handR.skeleton.middleMetacarpal.position - drawable.transform.position;
@@ -89,6 +83,7 @@ public class SpellInput : SymbolRecognition
                 NotDrawing();
 			}
         }
+
         if (!LeftGrapPinch && LeftGrapGrip)
 		{
             Ray raycastL = new Ray(handL.skeleton.indexTip.position, -handL.skeleton.indexTip.right);
