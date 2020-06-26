@@ -76,7 +76,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: faceed6e83eae8b46925deb22637b339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileForce: 5
+  projectileForce: 10
   OnHitEffect:
     m_PersistentCalls:
       m_Calls:

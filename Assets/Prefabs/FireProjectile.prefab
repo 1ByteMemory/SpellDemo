@@ -155,7 +155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 36514b9579b7bb746a0e0dbf375acc2a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectileForce: 5
+  projectileForce: 10
   OnHitEffect:
     m_PersistentCalls:
       m_Calls:
