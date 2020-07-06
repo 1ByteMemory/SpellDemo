@@ -33,19 +33,19 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean GrabPinchR
+        public virtual SteamVR_Action_Boolean GrabPinch
         {
             get
             {
-                return SteamVR_Actions.default_GrabPinchR;
+                return SteamVR_Actions.default_GrabPinch;
             }
         }
         
-        public virtual SteamVR_Action_Boolean GrabGripR
+        public virtual SteamVR_Action_Boolean GrabGrip
         {
             get
             {
-                return SteamVR_Actions.default_GrabGripR;
+                return SteamVR_Actions.default_GrabGrip;
             }
         }
         
@@ -105,19 +105,35 @@ namespace Valve.VR
             }
         }
         
-        public virtual SteamVR_Action_Boolean GrabPinchL
+        public virtual SteamVR_Action_Boolean GrabGripRight
         {
             get
             {
-                return SteamVR_Actions.default_GrabPinchL;
+                return SteamVR_Actions.default_GrabGripRight;
             }
         }
         
-        public virtual SteamVR_Action_Boolean GrabGripL
+        public virtual SteamVR_Action_Boolean GrabGripLeft
         {
             get
             {
-                return SteamVR_Actions.default_GrabGripL;
+                return SteamVR_Actions.default_GrabGripLeft;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean GrabPinchRight
+        {
+            get
+            {
+                return SteamVR_Actions.default_GrabPinchRight;
+            }
+        }
+        
+        public virtual SteamVR_Action_Boolean GrabPinchLeft
+        {
+            get
+            {
+                return SteamVR_Actions.default_GrabPinchLeft;
             }
         }
         

@@ -1,11 +1,11 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
 using PDollarGestureRecognizer;
 using PDollarDemo;
+using System.Xml.Schema;
+using System.IO;
+using System.Xml;
 
 public enum GestureInput
 {
@@ -20,7 +20,9 @@ public class SymbolRecognition : MonoBehaviour
     List<PDollarGestureRecognizer.Point> points = new List<PDollarGestureRecognizer.Point>();   // mouse points acquired from the user
     Gesture[] trainingSet = null;   // training set loaded from XML files
 
-    bool symbolRecognised;
+    bool symbolRecognised = true;
+
+    public GameObject Test;
 
     public string gestureClass;
     public Transform castPosition;
@@ -79,15 +81,14 @@ public class SymbolRecognition : MonoBehaviour
     {
         Gesture candidate = new Gesture(points.ToArray());
         gestureClass = PointCloudRecognizer.Classify(candidate, trainingSet);
+        
+        if (Test != null)
+            Test.transform.position += Vector3.up * 5;
 
-
-        // Check if no gesture was recognised
-        if (false)
-		{
-            symbolRecognised = false;
-		}
-        else
-            symbolRecognised = true;
+        ///////////////////////////////////////////////////////
+        /// Make a check to see if symbol wasn't regocnised ///
+        ///////////////////////////////////////////////////////
+        symbolRecognised = true;
 
 
         Debug.Log("Recognized as: " + gestureClass);
@@ -101,27 +102,26 @@ public class SymbolRecognition : MonoBehaviour
 	{
         if (symbolRecognised)
 		{
+            
 			// Switch case on action to take based on symbol
 			switch (gestureClass)
 			{
 				case "Fire":
-                    Spell(0);
+                    spellIndex = 0;
 					break;
                 case "Ice":
-                    Spell(1);
+                    spellIndex = 1;
                     break;
                 case "Earth":
-                    Spell(2);
+                    spellIndex = 2;
                     break;
 			}
             gestureClass = "";
 		}
 	}
+    public int spellIndex;
 
-    void Spell(int index)
-	{
-        Instantiate(spells[index], castPosition.position, Quaternion.LookRotation(transform.forward));
-    }
+
 
 
 
@@ -133,19 +133,26 @@ public class SymbolRecognition : MonoBehaviour
     /// <returns></returns>
     private Gesture[] LoadTrainingSet()
     {
-        Debug.Log(string.Format("loading traing set from: {0}\\GestureSet", Application.dataPath));
+        Debug.Log(string.Format("loading traing set from: {0}", Application.dataPath));
+        
         List<Gesture> gestures = new List<Gesture>();
-        string[] gestureFolders = Directory.GetDirectories(Application.dataPath + "\\PDollarRecognition\\GestureSet");
-        foreach (string folder in gestureFolders)
+        
+        Object[] gestureFolders = Resources.LoadAll("", typeof (TextAsset));
+        
+        foreach (var folder in gestureFolders)
         {
-            string[] gestureFiles = Directory.GetFiles(folder, "*.xml");
-            foreach (string file in gestureFiles)
-                gestures.Add(GestureIO.ReadGesture(file));
+
+            string filename = folder.name;
+            TextAsset binary = Resources.Load<TextAsset>(filename);
+            
+            gestures.Add(GestureIO.ReadGesture(binary.text));
         }
+        Debug.Log(gestures);
         return gestures.ToArray();
     }
 
 
+    /*
     /// <summary>
     /// Save gesture points to file
     /// </summary>
@@ -165,7 +172,7 @@ public class SymbolRecognition : MonoBehaviour
         // reload the training set
         this.trainingSet = LoadTrainingSet();
     }
-
+    */
 	#endregion
 
 

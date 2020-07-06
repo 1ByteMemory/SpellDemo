@@ -39,7 +39,7 @@ namespace FreeDraw
         Color[] clean_colours_array;
         Color transparent;
         Color32[] cur_colors;
-        bool mouse_was_previously_held_down = false;
+        //bool mouse_was_previously_held_down = false;
         bool no_drawing_on_current_drag = false;
 
 

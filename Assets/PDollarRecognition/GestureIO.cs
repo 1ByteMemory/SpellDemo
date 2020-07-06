@@ -1,6 +1,8 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Xml;
+using UnityEditor;
+using UnityEngine;
 using PDollarGestureRecognizer;
 
 namespace PDollarDemo
@@ -15,12 +17,44 @@ namespace PDollarDemo
         public static Gesture ReadGesture(string fileName)
         {
             List<Point> points = new List<Point>();
-            XmlTextReader xmlReader = null;
+            
+            XmlDocument doc = new XmlDocument();
+            doc.LoadXml(fileName);
+
             int currentStrokeIndex = -1;
             string gestureName = "";
             try
             {
-                xmlReader = new XmlTextReader(File.OpenText(fileName));
+
+                var gestureNode = doc.SelectNodes("Gesture");
+                gestureName = gestureNode[0].Attributes["Name"].Value;
+
+
+				string stokesPath = "Gesture/Stroke";
+                var strokeNodes = doc.SelectNodes(stokesPath);
+                
+                currentStrokeIndex = strokeNodes.Count;
+
+                string pointsPath = "Gesture/Stroke/Point";
+                var pointNodes = doc.SelectNodes(pointsPath);
+
+
+				foreach (XmlNode childNodes in pointNodes)
+				{
+                    points.Add(
+                        new Point(
+                            float.Parse(childNodes.Attributes["X"].Value),
+                            float.Parse(childNodes.Attributes["Y"].Value),
+                            currentStrokeIndex
+                        )
+                    );
+				}
+
+				#region Original Code from website
+				/* 
+                xmlReader = new XmlTextReader(fileName);
+                Debug.Log("Reading " + fileName);
+
                 while (xmlReader.Read())
                 {
                     if (xmlReader.NodeType != XmlNodeType.Element) continue;
@@ -45,11 +79,14 @@ namespace PDollarDemo
                             break;
                     }
                 }
+                */
+				#endregion
+			
             }
-            finally
+			finally
             {
-                if (xmlReader != null)
-                    xmlReader.Close();
+                if (doc != null)
+                    doc.RemoveAll();
             }
             return new Gesture(points.ToArray(), gestureName);
         }

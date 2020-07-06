@@ -5,6 +5,7 @@ using Valve.VR;
 using Valve.VR.InteractionSystem;
 using Valve.VR.Extras;
 using FreeDraw;
+using System;
 
 public class SpellInput : SymbolRecognition
 {
@@ -17,12 +18,33 @@ public class SpellInput : SymbolRecognition
     public Hand handR;
     public Hand handL;
 
-    bool handRDrawing;
-    bool handLDrawing;
+    public SteamVR_Action_Boolean actionRightGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("default", "GrabGripRight");
+    public SteamVR_Action_Boolean actionLeftGrip = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("default", "GrabGripLeft");
+    public SteamVR_Action_Boolean actionRightPinch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("default", "GrabPinchRight");
+    public SteamVR_Action_Boolean actionLeftPinch = SteamVR_Input.GetAction<SteamVR_Action_Boolean>("default", "GrabPinchLeft");
+
+    bool handDrawing;
+    bool isLeftDrawing;
+    bool isrightDrawing;
+
+    enum HandAction
+	{
+        drawing,
+        casting,
+        none
+	}
+
+    HandAction rightHandAction;
+    HandAction leftHandAction;
+
+    bool isLIndexOpen,
+        isRIndexOpen,
+        isLPalmOpen,
+        isRPalmOpen;
+
 
     [Header("")]
-    RaycastHit hitR;
-    RaycastHit hitL;
+    RaycastHit hit;
 
     public Drawable drawable;
 
@@ -38,99 +60,159 @@ public class SpellInput : SymbolRecognition
         sound[1] = GetComponentsInParent<AudioSource>()[1];
 	}
 
+	private void OnEnable()
+	{
+        actionLeftGrip.AddOnChangeListener(HandActionChange, handL.handType);
+        actionLeftPinch.AddOnChangeListener(HandActionChange, handL.handType);
+
+		actionRightGrip.AddOnChangeListener(HandActionChange, handR.handType);
+        actionRightPinch.AddOnChangeListener(HandActionChange, handR.handType);
+
+    }
+
+	private void OnDisable()
+	{
+        if (actionLeftGrip != null)
+            actionLeftGrip.RemoveOnChangeListener(HandActionChange, handL.handType);
+
+        if (actionLeftPinch != null)
+            actionLeftPinch.RemoveOnChangeListener(HandActionChange, handL.handType);
+
+        if (actionRightGrip != null)
+            actionRightGrip.RemoveOnChangeListener(HandActionChange, handR.handType);
+
+        if (actionRightPinch != null)
+            actionRightPinch.RemoveOnChangeListener(HandActionChange, handR.handType);
+
+
+	}
+
+	public void HandActionChange(SteamVR_Action_Boolean actionIn, SteamVR_Input_Sources inputSource, bool newValue)
+	{
+        if (actionIn.GetPath() == actionLeftGrip.GetPath())
+        {
+            //Debug.Log("lg: " + newValue);
+            isLPalmOpen = !newValue;
+        }
+        else if (actionIn.GetPath() == actionLeftPinch.GetPath())
+        {
+            //Debug.Log("lp: " + newValue);
+            isLIndexOpen = !newValue;
+        }
+        else if (actionIn.GetPath() == actionRightGrip.GetPath())
+        {
+            //Debug.Log("rg: " + newValue);
+            isRPalmOpen = !newValue;
+        }
+        else if (actionIn.GetPath() == actionRightPinch.GetPath())
+        {
+            //Debug.Log("rp: " + newValue);
+            isRIndexOpen = !newValue;
+        }
+		
+	}
 
 	// Update is called once per frame
 	void Update()
     {
-
         Vector3 forward = drawable.transform.TransformDirection(Vector3.back);
-        Vector3 toOtherR = handR.skeleton.middleMetacarpal.position - drawable.transform.position;
-        Vector3 toOtherL = handL.skeleton.middleMetacarpal.position - drawable.transform.position;
-
-        bool LeftGrapGrip = handL.grabGripAction.state;
-        bool LeftGrapPinch = handL.grabPinchAction.state;
-
-        bool RightGrapGrip = handR.grabGripAction.state;
-        bool RightGrapPinch = handR.grabPinchAction.state;
         
-        if (!RightGrapPinch && RightGrapGrip)
-        {
-            Ray raycastR = new Ray(handR.skeleton.indexTip.position, handR.skeleton.indexTip.right);
-			
-
-            // Right Hand
-            if (Physics.Raycast(raycastR, out hitR, drawRangeInCM / 100)) // Divided by 100 to convert it to meters
-            {
-                if (hitR.transform.CompareTag("Box"))
-			    {
-                    handRDrawing = true;
-					if (!sound[1].isPlaying)
-						sound[1].Play();
-
-					sprite = hitR.transform.GetComponent<SpriteRenderer>().sprite;
-                    DrawSymbol(hitR.transform.InverseTransformPoint(hitR.point));    
-
-                }
-                else
-				{
-                    handRDrawing = false;
-                    NotDrawing();
-                }
-			}
-			else
-			{
-                handRDrawing = false;
-                NotDrawing();
-			}
-        }
-
-        if (!LeftGrapPinch && LeftGrapGrip)
+        if (handL != null)
 		{
-            Ray raycastL = new Ray(handL.skeleton.indexTip.position, -handL.skeleton.indexTip.right);
+            if (isLIndexOpen && !isLPalmOpen)
+                HandDrawing(SteamVR_Input_Sources.LeftHand, handL);
 
-            if (Physics.Raycast(raycastL, out hitL, drawRangeInCM / 100))
+            if (isLIndexOpen && isLPalmOpen)
+                SpellCastingCheck(forward, handL.skeleton.middleMetacarpal.position - drawable.transform.position);
+		}
+
+        if (handR != null)
+		{
+            if (isRIndexOpen && !isRPalmOpen)
+                HandDrawing(SteamVR_Input_Sources.RightHand, handR);
+
+            if (isRIndexOpen && isRPalmOpen)
+                SpellCastingCheck(forward, handR.skeleton.middleMetacarpal.position - drawable.transform.position);
+        }
+    }
+
+    void HandDrawing(SteamVR_Input_Sources sourceHand, Hand hand)
+    {
+        
+        //Debug.Log(string.Format("grip {0}; pinch {1}", GrapGrip, GrapPinch));
+
+        Ray raycast;
+
+        if (sourceHand == SteamVR_Input_Sources.RightHand)
+            raycast = new Ray(hand.skeleton.indexTip.position, hand.skeleton.indexTip.right);
+        else 
+            raycast = new Ray(hand.skeleton.indexTip.position, -hand.skeleton.indexTip.right);
+
+
+        // Right Hand
+        if (Physics.Raycast(raycast, out hit, drawRangeInCM / 100)) // Divided by 100 to convert it to meters
+		{
+            
+            if (hit.transform.CompareTag("Box"))
             {
-                if (hitL.transform.CompareTag("Box"))
-                {
-                    handLDrawing = true;
+                //Debug.Log("drawing");
 
-                    if (!sound[1].isPlaying)
-                        sound[1].Play();
+                handDrawing = true;
+                if (!sound[1].isPlaying)
+                    sound[1].Play();
 
-                    sprite = hitL.transform.GetComponent<SpriteRenderer>().sprite;
-                    DrawSymbol(hitL.transform.InverseTransformPoint(hitL.point));
+                sprite = hit.transform.GetComponent<SpriteRenderer>().sprite;
+                DrawSymbol(hit.transform.InverseTransformPoint(hit.point));
 
-                }
-                else
-                {
-                    handLDrawing = false;
-                    NotDrawing();
-                }
             }
             else
             {
-                handLDrawing = false;
+                handDrawing = false;
                 NotDrawing();
             }
         }
-
-        if (Vector3.Dot(forward, toOtherR) < 0 || Vector3.Dot(forward, toOtherL) < 0)
+        else
         {
-            if ((!RightGrapPinch && !RightGrapGrip) || (!LeftGrapPinch && !LeftGrapGrip))
+            handDrawing = false;
+            NotDrawing();
+        }
+        
+        if (!handDrawing)
+		{
+            if (sourceHand == SteamVR_Input_Sources.RightHand)
+                isrightDrawing = false;
+            else
+                isLeftDrawing = false;
+		}
+		else
+		{
+
+            if (sourceHand == SteamVR_Input_Sources.RightHand)
+                isrightDrawing = true;
+            else
+                isLeftDrawing = true;
+		}
+    }
+
+    void SpellCastingCheck(Vector3 forward, Vector3 toOther)
+	{
+        if (Vector3.Dot(forward, toOther) < 0)
+        {
+            if (!newLine)
             {
-                if (!newLine)
-                {
-                    newLine = true;
-                    drawable.ResetCanvas();
+                newLine = true;
+                drawable.ResetCanvas();
 
-                    sound[0].Play();
+                sound[0].Play();
 
-                    handRDrawing = false;
-                    handLDrawing = false;
+                handDrawing = false;
 
-                    NotDrawing();
-                    DrawingInputStart(GestureInput.Cast);
-                }
+                NotDrawing();
+                DrawingInputStart(GestureInput.Cast);
+
+                Instantiate(spells[spellIndex], castPosition.position, Quaternion.LookRotation(transform.forward));
+
+
             }
         }
     }
@@ -200,7 +282,7 @@ public class SpellInput : SymbolRecognition
     }
     void NotDrawing()
 	{
-        if (!handLDrawing && !handRDrawing)
+        if (!isLeftDrawing && !isrightDrawing)
 		{
             if (sound[1].isPlaying)
                 sound[1].Stop();
